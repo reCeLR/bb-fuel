@@ -34,6 +34,25 @@ public class ProductSummaryConfigurator {
             .forEach(arrangementsIntegrationRestClient::ingestProductAndLogResponse);
     }
 
+    public List<ArrangementId> ingestArrangementsFromInputFile(String externalLegalEntityId) throws Exception {
+        List<ArrangementId> arrangementIds = new ArrayList<>();
+
+        List<ArrangementsPostRequestBody> arrangements = ProductSummaryDataGenerator
+            .generateArrangementsPostRequestBodiesFromInputFile(externalLegalEntityId);
+
+        for (ArrangementsPostRequestBody arrangement : arrangements) {
+            ArrangementsPostResponseBody arrangementsPostResponseBody = arrangementsIntegrationRestClient
+                .ingestArrangement(arrangement);
+
+            LOGGER.info("Arrangement [{}] ingested for product [{}] under legal entity [{}]",
+                arrangement.getName(), arrangement.getProductId(), externalLegalEntityId);
+
+            arrangementIds.add(new ArrangementId(arrangementsPostResponseBody.getId(), arrangement.getId()));
+        }
+
+        return arrangementIds;
+    }
+
     public List<ArrangementId> ingestArrangements(String externalLegalEntityId, ProductGroupSeed productGroupSeed) {
         List<ArrangementsPostRequestBody> arrangements = synchronizedList(new ArrayList<>());
         List<ArrangementId> arrangementIds = synchronizedList(new ArrayList<>());

@@ -167,8 +167,15 @@ public class AccessControlSetup extends BaseSetup {
                 .orElse(null);
 
             if (existingDataGroup == null) {
-                List<ArrangementId> arrangementIds = this.productSummaryConfigurator.ingestArrangements(
-                    externalLegalEntityId, productGroupSeed);
+//                List<ArrangementId> arrangementIds = this.productSummaryConfigurator.ingestArrangements(
+//                    externalLegalEntityId, productGroupSeed);
+
+                List<ArrangementId> arrangementIds = null;
+                try {
+                    arrangementIds = this.productSummaryConfigurator.ingestArrangementsFromInputFile(externalLegalEntityId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 productGroupSeed.setExternalServiceAgreementId(externalServiceAgreementId);
                 this.accessGroupsConfigurator

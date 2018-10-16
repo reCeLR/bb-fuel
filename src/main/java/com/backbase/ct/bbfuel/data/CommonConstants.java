@@ -79,4 +79,6 @@ public final class CommonConstants {
     public static final String PAYMENT_TYPE_SEPA_CREDIT_TRANSFER = "SEPA_CREDIT_TRANSFER";
     public static final String PAYMENT_TYPE_US_DOMESTIC_WIRE = "US_DOMESTIC_WIRE";
 
+    // Temp
+    public static final String PROPERTY_CSV_FILE_LOCATION = "csv.file.location";
 }

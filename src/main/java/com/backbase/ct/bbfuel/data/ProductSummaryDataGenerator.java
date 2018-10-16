@@ -12,6 +12,7 @@ import static java.util.Arrays.asList;
 import static org.apache.commons.collections.ListUtils.synchronizedList;
 
 import com.backbase.ct.bbfuel.dto.entitlement.ProductGroupSeed;
+import com.backbase.ct.bbfuel.input.CsvArrangementReader;
 import com.backbase.ct.bbfuel.input.ProductReader;
 import com.backbase.ct.bbfuel.util.GlobalProperties;
 import com.backbase.integration.arrangement.rest.spec.v2.arrangements.ArrangementsPostRequestBody;
@@ -122,6 +123,21 @@ public class ProductSummaryDataGenerator {
 
             arrangementsPostRequestBodies.add(arrangementsPostRequestBody);
         });
+
+        return arrangementsPostRequestBodies;
+    }
+
+    public static List<ArrangementsPostRequestBody> generateArrangementsPostRequestBodiesFromInputFile(String externalLegalEntityId)
+        throws Exception {
+        CsvArrangementReader csvArrangementReader = new CsvArrangementReader();
+
+        List<ArrangementsPostRequestBody> arrangementsPostRequestBodies = csvArrangementReader
+            .retrieveArrangementsPostRequestBodiesFromFile();
+
+        for (ArrangementsPostRequestBody arrangementsPostRequestBody : arrangementsPostRequestBodies) {
+            arrangementsPostRequestBody.setId(UUID.randomUUID().toString());
+            arrangementsPostRequestBody.setLegalEntityId(externalLegalEntityId);
+        }
 
         return arrangementsPostRequestBodies;
     }
