@@ -30,7 +30,6 @@ import com.backbase.ct.bbfuel.input.ProductGroupSeedReader;
 import com.backbase.ct.bbfuel.service.JobProfileService;
 import com.backbase.ct.bbfuel.service.ProductGroupService;
 import com.backbase.ct.bbfuel.service.UserContextService;
-import com.backbase.presentation.accessgroup.rest.spec.v2.accessgroups.datagroups.DataGroupsGetResponseBody;
 import com.backbase.presentation.user.rest.spec.v2.users.LegalEntityByUserGetResponseBody;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -153,20 +152,20 @@ public class AccessControlSetup extends BaseSetup {
         productGroupSeedTemplates.forEach(productGroupTemplate -> {
             ProductGroupSeed productGroupSeed = new ProductGroupSeed(productGroupTemplate);
 
-            if ((isRetail && !productGroupSeed.getIsRetail()) || (!isRetail && productGroupSeed.getIsRetail())) {
-                return;
-            }
+//            if ((isRetail && !productGroupSeed.getIsRetail()) || (!isRetail && productGroupSeed.getIsRetail())) {
+//                return;
+//            }
+//
+//            // Combination of data group name and service agreement is unique in the system
+//            DataGroupsGetResponseBody existingDataGroup = accessGroupPresentationRestClient
+//                .retrieveDataGroupsByServiceAgreement(internalServiceAgreementId)
+//                .stream()
+//                .filter(dataGroupsGetResponseBody -> productGroupSeed.getProductGroupName()
+//                    .equals(dataGroupsGetResponseBody.getName()))
+//                .findFirst()
+//                .orElse(null);
 
-            // Combination of data group name and service agreement is unique in the system
-            DataGroupsGetResponseBody existingDataGroup = accessGroupPresentationRestClient
-                .retrieveDataGroupsByServiceAgreement(internalServiceAgreementId)
-                .stream()
-                .filter(dataGroupsGetResponseBody -> productGroupSeed.getProductGroupName()
-                    .equals(dataGroupsGetResponseBody.getName()))
-                .findFirst()
-                .orElse(null);
-
-            if (existingDataGroup == null) {
+//            if (existingDataGroup == null) {
 //                List<ArrangementId> arrangementIds = this.productSummaryConfigurator.ingestArrangements(
 //                    externalLegalEntityId, productGroupSeed);
 
@@ -185,12 +184,12 @@ public class AccessControlSetup extends BaseSetup {
 
                 ingestTransactions(arrangementIds, isRetail);
                 ingestBalanceHistory(arrangementIds);
-            } else {
-                productGroupSeed.setId(existingDataGroup.getId());
-                productGroupSeed.setExternalServiceAgreementId(externalServiceAgreementId);
-                productGroupService.storeInCache(productGroupSeed);
-                productGroupService.saveAssignedProductGroup(productGroupSeed);
-            }
+//            } else {
+//                productGroupSeed.setId(existingDataGroup.getId());
+//                productGroupSeed.setExternalServiceAgreementId(externalServiceAgreementId);
+//                productGroupService.storeInCache(productGroupSeed);
+//                productGroupService.saveAssignedProductGroup(productGroupSeed);
+//            }
         });
     }
 
