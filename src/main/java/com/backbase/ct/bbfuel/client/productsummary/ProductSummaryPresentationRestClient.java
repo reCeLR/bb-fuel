@@ -62,7 +62,7 @@ public class ProductSummaryPresentationRestClient extends RestClient {
             .filter(arrangement -> arrangement.getIBAN() != null)
             .filter(arrangement -> arrangement.getIBAN()
                 .matches(
-                    "^(AT|BE|BG|CH|CY|CZ|DE|DK|EE|ES|FI|FR|GB|GI|GR|HR|HU|IE|IS|IT|LI|LT|LU|LV|MC|MT|NL|NO|PL|PT|RO|SE|SI|SK|SM)[a-zA-Z0-9_.-]*"))
+                    "^(AD|AT|BE|BG|CH|CY|CZ|DE|DK|EE|ES|FI|FR|GB|GI|GR|HR|HU|IE|IS|IT|LI|LT|LU|LV|MC|MT|NL|NO|PL|PT|RO|SE|SI|SK|SM|VA)[a-zA-Z0-9_.-]*"))
             .collect(Collectors.toList());
     }
 
