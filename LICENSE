@@ -48,7 +48,6 @@ Backbase bb-fuel depends on the following third-party products (and version):
 * Google Guava (24.0-jre)
 * H2 (1.4.197)
 * Hamcrest (1.3)
-* iban4j (3.2.1)
 * Java Faker (1.4.197)
 * Junit (4.12)
 * Lombok (1.16.22)

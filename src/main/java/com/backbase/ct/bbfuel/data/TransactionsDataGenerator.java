@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.time.DateUtils;
-import org.iban4j.Iban;
 
 public class TransactionsDataGenerator {
 
@@ -132,7 +131,7 @@ public class TransactionsDataGenerator {
             .withInstructedCurrency(EUR_CURRENCY)
             .withCurrencyExchangeRate(CommonHelpers.generateRandomAmountInRange(1L, 2L))
             .withCounterPartyName(faker.name().fullName())
-            .withCounterPartyAccountNumber(Iban.random().toString())
+            .withCounterPartyAccountNumber(faker.finance().iban())
             .withCounterPartyBIC(faker.finance().bic())
             .withCounterPartyCountry(faker.address().countryCode())
             .withCounterPartyBankName(faker.company().name());
