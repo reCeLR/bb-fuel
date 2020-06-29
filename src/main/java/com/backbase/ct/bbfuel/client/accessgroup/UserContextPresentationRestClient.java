@@ -38,9 +38,7 @@ public class UserContextPresentationRestClient extends RestClient {
         ServiceAgreementGetResponseBody masterServiceAgreement = getMasterServiceAgreementForUserContext();
 
         postUserContext(new UserContextPostRequestBody()
-            .withServiceAgreementId(masterServiceAgreement.getId()))
-            .then()
-            .statusCode(SC_NO_CONTENT);
+            .withServiceAgreementId(masterServiceAgreement.getId()));
     }
 
     private Response postUserContext(UserContextPostRequestBody userContextPostRequestBody) {

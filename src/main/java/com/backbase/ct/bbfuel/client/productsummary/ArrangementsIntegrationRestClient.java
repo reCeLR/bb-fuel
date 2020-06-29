@@ -2,9 +2,12 @@ package com.backbase.ct.bbfuel.client.productsummary;
 
 import static com.backbase.ct.bbfuel.util.ResponseUtils.isBadRequestExceptionWithErrorKey;
 import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_OK;
+import static java.util.Arrays.asList;
 
 import com.backbase.ct.bbfuel.client.common.RestClient;
 import com.backbase.ct.bbfuel.config.BbFuelConfiguration;
+import com.backbase.integration.arrangement.rest.spec.v2.arrangements.ArrangementItemResponseBody;
 import com.backbase.integration.arrangement.rest.spec.v2.arrangements.ArrangementsPostRequestBody;
 import com.backbase.integration.arrangement.rest.spec.v2.arrangements.ArrangementsPostResponseBody;
 import com.backbase.integration.arrangement.rest.spec.v2.balancehistory.BalanceHistoryPostRequestBody;
@@ -15,6 +18,8 @@ import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Slf4j
 @Component
@@ -32,6 +37,24 @@ public class ArrangementsIntegrationRestClient extends RestClient {
     public void init() {
         setBaseUri(config.getDbs().getArrangements());
         setVersion(SERVICE_VERSION);
+    }
+
+    public ArrangementItemResponseBody getArrangementByExternalId(String id) {
+        try {
+            List<ArrangementItemResponseBody> items = asList(requestSpec()
+                    .contentType(ContentType.JSON)
+                    .get(getPath(ENDPOINT_ARRANGEMENTS) + "?ids="+id)
+                    .then()
+                    .extract()
+                    .as(ArrangementItemResponseBody[].class));
+            if (items.size() > 0) {
+                log.info("More than one arrangement with id [{}] found", id);
+            }
+            return items.get(0);
+        } catch (Exception e) {
+            //do nothing
+            return null;
+        }
     }
 
     public ArrangementsPostResponseBody ingestArrangement(ArrangementsPostRequestBody body) {

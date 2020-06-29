@@ -10,6 +10,7 @@ import com.backbase.ct.bbfuel.client.productsummary.ArrangementsIntegrationRestC
 import com.backbase.ct.bbfuel.data.ProductSummaryDataGenerator;
 import com.backbase.ct.bbfuel.dto.ArrangementId;
 import com.backbase.ct.bbfuel.dto.entitlement.ProductGroupSeed;
+import com.backbase.integration.arrangement.rest.spec.v2.arrangements.ArrangementItemResponseBody;
 import com.backbase.integration.arrangement.rest.spec.v2.arrangements.ArrangementsPostRequestBody;
 import com.backbase.integration.arrangement.rest.spec.v2.arrangements.ArrangementsPostResponseBody;
 import com.backbase.integration.arrangement.rest.spec.v2.balancehistory.BalanceHistoryPostRequestBody;
@@ -57,11 +58,25 @@ public class ProductSummaryConfigurator {
         }
 
         arrangements.parallelStream().forEach(arrangement -> {
-            ArrangementsPostResponseBody arrangementsPostResponseBody = arrangementsIntegrationRestClient
-                .ingestArrangement(arrangement);
-            log.info("Arrangement [{}] ingested for product [{}] under legal entity [{}]",
-                arrangement.getName(), arrangement.getProductId(), externalLegalEntityId);
-            arrangementIds.add(new ArrangementId(arrangementsPostResponseBody.getId(), arrangement.getId()));
+            ArrangementItemResponseBody existingArrangement = null;
+            try {
+                existingArrangement = arrangementsIntegrationRestClient.getArrangementByExternalId(arrangement.getId());
+            } catch (Exception e) {
+                //do nothing
+            }
+            if (existingArrangement != null) {
+                log.info("Arrangement [{}] ingested for product [{}] under legal entity [{}]",
+                        arrangement.getName(), arrangement.getProductId(), externalLegalEntityId);
+                arrangementIds.add(new ArrangementId(existingArrangement.getInternalId(), arrangement.getId()));
+            } else {
+                ArrangementsPostResponseBody arrangementsPostResponseBody = arrangementsIntegrationRestClient
+                        .ingestArrangement(arrangement);
+                    log.info("Arrangement [{}] ingested for product [{}] under legal entity [{}]",
+                        arrangement.getName(), arrangement.getProductId(), externalLegalEntityId);
+                arrangementIds.add(new ArrangementId(arrangementsPostResponseBody.getId(), arrangement.getId()));
+            }
+
+
         });
 
         return arrangementIds;
