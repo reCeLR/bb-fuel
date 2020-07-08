@@ -1,12 +1,16 @@
 package com.backbase.ct.bbfuel.client.legalentity;
 
+import static java.util.Arrays.asList;
 import static org.apache.http.HttpStatus.SC_OK;
 
 import com.backbase.ct.bbfuel.client.common.RestClient;
 import com.backbase.ct.bbfuel.config.BbFuelConfiguration;
 import com.backbase.presentation.accessgroup.rest.spec.v2.accessgroups.serviceagreements.ServiceAgreementGetResponseBody;
+import com.backbase.presentation.legalentity.rest.spec.v2.legalentities.LegalEntitiesGetResponseBody;
+import com.backbase.presentation.legalentity.rest.spec.v2.legalentities.LegalEntityByExternalIdGetResponseBody;
 import com.backbase.presentation.legalentity.rest.spec.v2.legalentities.LegalEntityByIdGetResponseBody;
 import io.restassured.response.Response;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,6 +24,7 @@ public class LegalEntityPresentationRestClient extends RestClient {
     private static final String SERVICE_VERSION = "v2";
     private static final String CLIENT_API = "client-api";
     private static final String ENDPOINT_LEGAL_ENTITIES = "/legalentities";
+    private static final String ENDPOINT_SUB_ENTITIES = ENDPOINT_LEGAL_ENTITIES + "/sub-entities";
     private static final String ENDPOINT_EXTERNAL = ENDPOINT_LEGAL_ENTITIES + "/external/%s";
     private static final String ENDPOINT_SERVICE_AGREEMENTS_MASTER =
         ENDPOINT_LEGAL_ENTITIES + "/%s/serviceagreements/master";
@@ -31,9 +36,22 @@ public class LegalEntityPresentationRestClient extends RestClient {
         setInitialPath(config.getDbsServiceNames().getLegalentity() + "/" + CLIENT_API);
     }
 
-    public Response retrieveLegalEntityByExternalId(String externalLegalEntityId) {
+    public List<LegalEntitiesGetResponseBody> retrieveLegalEntities() {
+        return asList(requestSpec()
+            .get(getPath(ENDPOINT_SUB_ENTITIES))
+            .then()
+            .statusCode(SC_OK)
+            .extract()
+            .as(LegalEntitiesGetResponseBody[].class));
+    }
+
+    public LegalEntityByExternalIdGetResponseBody retrieveLegalEntityByExternalId(String externalLegalEntityId) {
         return requestSpec()
-            .get(String.format(getPath(ENDPOINT_EXTERNAL), externalLegalEntityId));
+                .get(String.format(getPath(ENDPOINT_EXTERNAL), externalLegalEntityId))
+                .then()
+                .statusCode(SC_OK)
+                .extract()
+                .as(LegalEntityByExternalIdGetResponseBody.class);
     }
 
     public LegalEntityByIdGetResponseBody retrieveLegalEntityByLegalEntityId(String internalLegalEntityId) {

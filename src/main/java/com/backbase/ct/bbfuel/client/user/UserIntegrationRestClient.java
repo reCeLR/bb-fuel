@@ -1,5 +1,6 @@
 package com.backbase.ct.bbfuel.client.user;
 
+import static com.backbase.ct.bbfuel.data.CommonConstants.PROPERTY_IDENTITY_FEATURE_TOGGLE;
 import static com.backbase.ct.bbfuel.util.ResponseUtils.isBadRequestException;
 import static org.apache.http.HttpStatus.SC_CREATED;
 
@@ -19,8 +20,10 @@ import org.springframework.stereotype.Component;
 public class UserIntegrationRestClient extends RestClient {
 
     private final BbFuelConfiguration config;
+    private final UserPresentationRestClient userPresentationRestClient;
     private static final String SERVICE_VERSION = "v2";
     private static final String ENDPOINT_USERS = "/users";
+    private static final String ENDPOINT_USERS_IDENTITIES = ENDPOINT_USERS + "/identities";
 
     @PostConstruct
     public void init() {
@@ -29,7 +32,13 @@ public class UserIntegrationRestClient extends RestClient {
     }
 
     public void ingestUserAndLogResponse(UsersPostRequestBody user) {
-        Response response = ingestUser(user);
+        Response response = null;
+        if (this.globalProperties.getBoolean(PROPERTY_IDENTITY_FEATURE_TOGGLE)) {
+            response = userPresentationRestClient.ingestUserWithIdentity(user);
+        } else {
+            response = ingestUser(user);
+        }
+
 
         if (isBadRequestException(response, "User already exists")) {
             log.info("User [{}] already exists, skipped ingesting this user", user.getExternalId());
@@ -48,4 +57,5 @@ public class UserIntegrationRestClient extends RestClient {
             .body(body)
             .post(getPath(ENDPOINT_USERS));
     }
+
 }

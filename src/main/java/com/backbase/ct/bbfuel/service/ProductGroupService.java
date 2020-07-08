@@ -58,7 +58,11 @@ public class ProductGroupService {
      * @return list of ids of product groups that match on name and have been assigned to the service agreement
      */
     public List<String> findAssignedProductGroupsIds(String externalServiceAgreementId, User user) {
-        return findAssignedProductGroups(externalServiceAgreementId)
+        List<ProductGroupSeed> products = findAssignedProductGroups(externalServiceAgreementId);
+        if (products == null) {
+            return new ArrayList<>();
+        }
+        return products
             .stream()
             .filter(productGroupSeed -> !CollectionUtils.isEmpty(user.getProductGroupNames())
                 && user.getProductGroupNames().contains(productGroupSeed.getProductGroupName()))

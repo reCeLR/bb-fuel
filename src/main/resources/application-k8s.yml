@@ -3,56 +3,21 @@ environment:
 
 bb-fuel:
   platform:
-    registry: http://registry.${environment.name}.${environment.domain}
-    identity: http://identity.${environment.name}.${environment.domain}
-    gateway: http://edge.${environment.name}.${environment.domain}/api
-    auth: http://edge.${environment.name}.${environment.domain}/api/auth/login
-    tokenconverter: http://tokenconverter.${environment.name}.${environment.domain}
+    registry: https://registry-latest-usa.retail.backbase.eu
+    identity: https://identity-latest-usa.retail.backbase.eu
+    gateway: https://app-latest-usa.retail.backbase.eu/api
+    auth: https://app-latest-usa.retail.backbase.eu/api/auth/login
+    tokenconverter: https://tokenconverter-latest-usa.retail.backbase.eu
   dbs:
-    accessgroup: http://accessgroup.${environment.name}.${environment.domain}
+    accessgroup: https://accessgroup-latest-usa.retail.backbase.eu
     accounts: http://account.${environment.name}.${environment.domain}/service-api
-    approvals: http://approvals.${environment.name}.${environment.domain}/integration-api
-    arrangements: http://arrangements.${environment.name}.${environment.domain}/client-api
+    approvals: https://approvals-latest-usa.retail.backbase.eu/integration-api
+    arrangements: https://arrangements-latest-usa.retail.backbase.eu/client-api
     billpay: http://billpayprovidermock.${environment.name}.${environment.domain}/client-api
-    contactmanager: http://contacts.${environment.name}.${environment.domain}/integration-api
-    legalentity: http://legalentity.${environment.name}.${environment.domain}
-    transactions: http://transactions.${environment.name}.${environment.domain}/integration-api
-    user: http://user.${environment.name}.${environment.domain}/client-api
-  dbs-service-names:
-    accessgroup: accessgroup-presentation-service
-    actions: actionrecipes-presentation-service
-    arrangements: product-summary-presentation-service
-    billpay: billpay-presentation-service
-    legalentity: legalentity-presentation-service
-    limits: limits-presentation-service
-    messages: messages-service
-    notifications: notifications-service
-    payments: payment-order-service
-    pfm: transaction-category-collector
-    user: user-presentation-service
-    products: product-summary-presentation-service
-
-
-environment:
-  domain: backbase.test
-
-bb-fuel:
-  platform:
-    registry: https://registry-latest.retail.backbase.eu
-    identity: https://identity-latest.retail.backbase.eu
-    gateway: https://app-latest.retail.backbase.eu/api
-    auth: https://app-latest.retail.backbase.eu/api/auth/login
-    tokenconverter: https://tokenconverter-latest.retail.backbase.eu
-  dbs:
-    accessgroup: https://accessgroup-latest.retail.backbase.eu
-    accounts: http://account.${environment.name}.${environment.domain}/service-api
-    approvals: https://approvals-latest.retail.backbase.eu/integration-api
-    arrangements: https://arrangements-latest.retail.backbase.eu/client-api
-    billpay: http://billpayprovidermock.${environment.name}.${environment.domain}/client-api
-    contactmanager: https://contacts-latest.retail.backbase.eu/integration-api
-    legalentity: https://legalentity-latest.retail.backbase.eu
-    transactions: https://transactions-latest.retail.backbase.eu
-    user: https://user-latest.retail.backbase.eu/client-api
+    contactmanager: https://contacts-latest-usa.retail.backbase.eu/integration-api
+    legalentity: https://legalentity-latest-usa.retail.backbase.eu
+    transactions: https://transactions-latest-usa.retail.backbase.eu
+    user: https://user-latest-usa.retail.backbase.eu/client-api
   dbs-service-names:
     accessgroup: accessgroup-presentation-service
     actions: actionrecipes-presentation-service
