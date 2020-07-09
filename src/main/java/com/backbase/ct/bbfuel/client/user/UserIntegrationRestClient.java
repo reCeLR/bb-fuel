@@ -2,6 +2,7 @@ package com.backbase.ct.bbfuel.client.user;
 
 import static com.backbase.ct.bbfuel.data.CommonConstants.PROPERTY_IDENTITY_FEATURE_TOGGLE;
 import static com.backbase.ct.bbfuel.util.ResponseUtils.isBadRequestException;
+import static com.backbase.ct.bbfuel.util.ResponseUtils.isConflictException;
 import static org.apache.http.HttpStatus.SC_CREATED;
 
 import com.backbase.ct.bbfuel.client.common.RestClient;
@@ -40,7 +41,7 @@ public class UserIntegrationRestClient extends RestClient {
         }
 
 
-        if (isBadRequestException(response, "User already exists")) {
+        if (isBadRequestException(response, "User already exists") || isConflictException(response, "User already exists")) {
             log.info("User [{}] already exists, skipped ingesting this user", user.getExternalId());
         } else if (response.statusCode() == SC_CREATED) {
             log.info("User [{}] ingested under legal entity [{}]",

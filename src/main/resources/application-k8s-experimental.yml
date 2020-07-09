@@ -1,0 +1,35 @@
+environment:
+  domain: backbase.test
+  name: experimental.retail
+
+bb-fuel:
+  platform:
+    registry: https://registry-experimental.retail.backbase.eu
+    identity: https://identity-experimental.retail.backbase.eu
+    gateway: https://app-experimental.retail.backbase.eu/api
+    auth: https://app-experimental.retail.backbase.eu/api/auth/login
+    tokenconverter: https://tokenconverter-experimental.retail.backbase.eu
+    infra: https://app-experimental.retail.backbase.eu
+  dbs:
+    accessgroup: https://accessgroup-experimental.retail.backbase.eu
+    accounts: http://account.${environment.name}.${environment.domain}/service-api
+    approvals: https://approvals-experimental.retail.backbase.eu/integration-api
+    arrangements: https://arrangements-experimental.retail.backbase.eu/client-api
+    billpay: http://billpayprovidermock.${environment.name}.${environment.domain}/client-api
+    contactmanager: https://contacts-experimental.retail.backbase.eu/integration-api
+    legalentity: https://legalentity-experimental.retail.backbase.eu
+    transactions: https://transactions-experimental.retail.backbase.eu/integration-api
+    user: https://user-experimental.retail.backbase.eu/client-api
+  dbs-service-names:
+    accessgroup: accessgroup-presentation-service
+    actions: actionrecipes-presentation-service
+    arrangements: product-summary-presentation-service
+    billpay: billpay-presentation-service
+    legalentity: legalentity-presentation-service
+    limits: limits-presentation-service
+    messages: messages-service
+    notifications: notifications-service
+    payments: payment-order-service
+    pfm: categories-management-presentation-service
+    user: user-presentation-service
+    products: product-summary-presentation-service

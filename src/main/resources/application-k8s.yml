@@ -1,5 +1,6 @@
 environment:
   domain: backbase.test
+  name: app-latest.retail
 
 bb-fuel:
   platform:
@@ -8,6 +9,7 @@ bb-fuel:
     gateway: https://app-latest-usa.retail.backbase.eu/api
     auth: https://app-latest-usa.retail.backbase.eu/api/auth/login
     tokenconverter: https://tokenconverter-latest-usa.retail.backbase.eu
+    infra: https://app-latest-usa.retail.backbase.eu
   dbs:
     accessgroup: https://accessgroup-latest-usa.retail.backbase.eu
     accounts: http://account.${environment.name}.${environment.domain}/service-api
@@ -16,7 +18,7 @@ bb-fuel:
     billpay: http://billpayprovidermock.${environment.name}.${environment.domain}/client-api
     contactmanager: https://contacts-latest-usa.retail.backbase.eu/integration-api
     legalentity: https://legalentity-latest-usa.retail.backbase.eu
-    transactions: https://transactions-latest-usa.retail.backbase.eu
+    transactions: https://transactions-latest-usa.retail.backbase.eu/integration-api
     user: https://user-latest-usa.retail.backbase.eu/client-api
   dbs-service-names:
     accessgroup: accessgroup-presentation-service

@@ -2,6 +2,7 @@ package com.backbase.ct.bbfuel.client.user;
 
 import static org.apache.http.HttpStatus.SC_OK;
 
+import com.backbase.ct.bbfuel.client.common.LoginRestClient;
 import com.backbase.ct.bbfuel.client.common.RestClient;
 import com.backbase.ct.bbfuel.client.legalentity.LegalEntityPresentationRestClient;
 import com.backbase.ct.bbfuel.config.BbFuelConfiguration;
@@ -25,6 +26,7 @@ public class UserPresentationRestClient extends RestClient {
     private final BbFuelConfiguration config;
 
     private final LegalEntityPresentationRestClient legalEntityPresentationRestClient;
+    private final LoginRestClient loginRestClient;
 
     private static final String SERVICE_VERSION = "v2";
     private static final String ENDPOINT_USERS = "/users";
@@ -58,12 +60,13 @@ public class UserPresentationRestClient extends RestClient {
     }
 
     public Response ingestUserWithIdentity(UsersPostRequestBody body) {
+        this.loginRestClient.loginBankAdmin();
         IdentitiesPostRequestBody identityPost = new IdentitiesPostRequestBody();
         LegalEntityByExternalIdGetResponseBody le = legalEntityPresentationRestClient.retrieveLegalEntityByExternalId(body.getLegalEntityExternalId());
 
         identityPost
                 .withLegalEntityInternalId(le.getId())
-                .withEmailAddress("custom@backbase.com")
+                .withEmailAddress("custom" + body.getExternalId() + "@backbase.com")
                 .withExternalId(body.getExternalId())
                 .withFamilyName(body.getFullName())
                 .withGivenName(body.getFullName())
