@@ -43,7 +43,7 @@ public class LegalEntitiesAndUsersConfigurator {
 
         User admin = root.getUsers().get(0);
         this.userIntegrationRestClient.ingestUserAndLogResponse(LegalEntitiesAndUsersDataGenerator
-            .generateUsersPostRequestBody(admin, EXTERNAL_ROOT_LEGAL_ENTITY_ID));
+            .generateUsersPostRequestBody(admin, EXTERNAL_ROOT_LEGAL_ENTITY_ID), true);
         this.serviceAgreementsConfigurator
             .setEntitlementsAdminUnderMsa(admin.getExternalId(), EXTERNAL_ROOT_LEGAL_ENTITY_ID);
     }
@@ -65,6 +65,6 @@ public class LegalEntitiesAndUsersConfigurator {
             .forEach(
                 user -> this.userIntegrationRestClient
                     .ingestUserAndLogResponse(LegalEntitiesAndUsersDataGenerator
-                        .generateUsersPostRequestBody(user, externalLegalEntityId)));
+                        .generateUsersPostRequestBody(user, externalLegalEntityId), false));
     }
 }

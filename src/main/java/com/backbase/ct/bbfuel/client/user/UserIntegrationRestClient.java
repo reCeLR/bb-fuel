@@ -32,12 +32,16 @@ public class UserIntegrationRestClient extends RestClient {
         setVersion(SERVICE_VERSION);
     }
 
-    public void ingestUserAndLogResponse(UsersPostRequestBody user) {
+    public void ingestUserAndLogResponse(UsersPostRequestBody user, boolean forceIgenoreIdentity) {
         Response response = null;
-        if (this.globalProperties.getBoolean(PROPERTY_IDENTITY_FEATURE_TOGGLE)) {
-            response = userPresentationRestClient.ingestUserWithIdentity(user);
-        } else {
+        if (forceIgenoreIdentity) {
             response = ingestUser(user);
+        } else {
+            if (this.globalProperties.getBoolean(PROPERTY_IDENTITY_FEATURE_TOGGLE)) {
+                response = userPresentationRestClient.ingestUserWithIdentity(user);
+            } else {
+                response = ingestUser(user);
+            }
         }
 
 
