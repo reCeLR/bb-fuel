@@ -20,11 +20,9 @@ import org.springframework.stereotype.Component;
 public class UserIntegrationRestClient extends RestClient {
 
     private final BbFuelConfiguration config;
-    private final IdentityIntegrationRestClient identityIntegrationRestClient;
     private static final String SERVICE_VERSION = "v2";
     private static final String ENDPOINT_USERS = "/users";
     private static final String ENDPOINT_IDENTITIES = ENDPOINT_USERS + "/identities";
-
 
     @PostConstruct
     public void init() {
