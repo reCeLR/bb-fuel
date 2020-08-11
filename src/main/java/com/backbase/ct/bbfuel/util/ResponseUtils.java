@@ -29,9 +29,7 @@ public class ResponseUtils {
     public static boolean isBadRequestException(Response response, String withMessage) {
         return response.statusCode() == SC_BAD_REQUEST && getBadRequestMessage(response).equals(withMessage);
     }
-    public static boolean isConflictException(Response response, String withMessage){
-        return response.statusCode() == SC_CONFLICT && getBadRequestMessage(response).equals(withMessage);
-    }
+
 
     public static boolean isBadRequestExceptionWithErrorKey(Response response, String withErrorKey) {
         return response.statusCode() == SC_BAD_REQUEST
