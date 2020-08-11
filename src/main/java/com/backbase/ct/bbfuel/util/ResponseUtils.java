@@ -1,8 +1,6 @@
 package com.backbase.ct.bbfuel.util;
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
-import static org.apache.http.HttpStatus.SC_CONFLICT;
-
 
 import com.backbase.buildingblocks.presentation.errors.BadRequestException;
 import io.restassured.response.Response;
