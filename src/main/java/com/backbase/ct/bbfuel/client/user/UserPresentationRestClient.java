@@ -2,10 +2,14 @@ package com.backbase.ct.bbfuel.client.user;
 
 import static org.apache.http.HttpStatus.SC_OK;
 
+
 import com.backbase.ct.bbfuel.client.common.RestClient;
 import com.backbase.ct.bbfuel.config.BbFuelConfiguration;
+import com.backbase.presentation.user.rest.spec.v2.users.IdentitiesPostRequestBody;
 import com.backbase.presentation.user.rest.spec.v2.users.LegalEntityByUserGetResponseBody;
 import com.backbase.presentation.user.rest.spec.v2.users.UserGetResponseBody;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,6 +24,7 @@ public class UserPresentationRestClient extends RestClient {
     private static final String ENDPOINT_USERS = "/users";
     private static final String ENDPOINT_EXTERNAL_ID_LEGAL_ENTITIES = ENDPOINT_USERS + "/externalId/%s/legalentities";
     private static final String ENDPOINT_USER_BY_EXTERNAL_ID = ENDPOINT_USERS + "/externalId/%s";
+    private static final String ENDPOINT_IDENTITIES = ENDPOINT_USERS + "/identities";
 
     @PostConstruct
     public void init() {
@@ -44,6 +49,13 @@ public class UserPresentationRestClient extends RestClient {
             .statusCode(SC_OK)
             .extract()
             .as(UserGetResponseBody.class);
+    }
+
+    public Response CreateIdentityUser(IdentitiesPostRequestBody body){
+        return requestSpec()
+            .contentType(ContentType.JSON)
+            .body(body)
+            .post(getPath(ENDPOINT_IDENTITIES));
     }
 
 }

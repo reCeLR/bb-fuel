@@ -1,14 +1,18 @@
 package com.backbase.ct.bbfuel.configurator;
 
 import static com.backbase.ct.bbfuel.data.CommonConstants.EXTERNAL_ROOT_LEGAL_ENTITY_ID;
+import static com.backbase.ct.bbfuel.data.CommonConstants.PROPERTY_IDENTITY_FEATURE_TOGGLE;
+
 
 import com.backbase.ct.bbfuel.client.accessgroup.UserContextPresentationRestClient;
 import com.backbase.ct.bbfuel.client.common.LoginRestClient;
+import com.backbase.ct.bbfuel.client.user.IdentityIntegrationRestClient;
 import com.backbase.ct.bbfuel.client.user.UserIntegrationRestClient;
 import com.backbase.ct.bbfuel.data.LegalEntitiesAndUsersDataGenerator;
 import com.backbase.ct.bbfuel.dto.LegalEntityWithUsers;
 import com.backbase.ct.bbfuel.dto.User;
 import com.backbase.ct.bbfuel.service.LegalEntityService;
+import com.backbase.ct.bbfuel.util.GlobalProperties;
 import com.backbase.integration.legalentity.rest.spec.v2.legalentities.LegalEntitiesPostRequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,8 +24,10 @@ public class LegalEntitiesAndUsersConfigurator {
     private final LoginRestClient loginRestClient;
     private final UserContextPresentationRestClient userContextPresentationRestClient;
     private final UserIntegrationRestClient userIntegrationRestClient;
+    private final IdentityIntegrationRestClient identityIntegrationRestClient;
     private final LegalEntityService legalEntityService;
     private final ServiceAgreementsConfigurator serviceAgreementsConfigurator;
+    private final GlobalProperties globalProperties;
 
     /**
      * Dispatch the creation of legal entity depending whether given legalEntityWithUsers is a root entity.
@@ -61,10 +67,22 @@ public class LegalEntitiesAndUsersConfigurator {
 
         String externalLegalEntityId = this.legalEntityService.ingestLegalEntity(requestBody);
 
-        legalEntityWithUsers.getUsers().parallelStream()
-            .forEach(
-                user -> this.userIntegrationRestClient
-                    .ingestUserAndLogResponse(LegalEntitiesAndUsersDataGenerator
-                        .generateUsersPostRequestBody(user, externalLegalEntityId)));
+            legalEntityWithUsers.getUsers().parallelStream()
+                .forEach(
+                    user -> {
+                        if(globalProperties.getBoolean(PROPERTY_IDENTITY_FEATURE_TOGGLE)) {
+                            this.identityIntegrationRestClient
+                                .ingestUserWithIdentityAndLogResponse(LegalEntitiesAndUsersDataGenerator
+                                    .generateUsersPostRequestBody(user,externalLegalEntityId));
+                        }else{
+                            this.userIntegrationRestClient
+                                .ingestUserAndLogResponse(LegalEntitiesAndUsersDataGenerator
+                                    .generateUsersPostRequestBody(user, externalLegalEntityId));
+                        }
+                    }
+                );
+
     }
 }
+
+

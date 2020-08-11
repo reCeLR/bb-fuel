@@ -3,6 +3,7 @@ package com.backbase.ct.bbfuel.client.user;
 import static com.backbase.ct.bbfuel.util.ResponseUtils.isBadRequestException;
 import static org.apache.http.HttpStatus.SC_CREATED;
 
+
 import com.backbase.ct.bbfuel.client.common.RestClient;
 import com.backbase.ct.bbfuel.config.BbFuelConfiguration;
 import com.backbase.integration.user.rest.spec.v2.users.UsersPostRequestBody;
@@ -19,8 +20,11 @@ import org.springframework.stereotype.Component;
 public class UserIntegrationRestClient extends RestClient {
 
     private final BbFuelConfiguration config;
+    private final IdentityIntegrationRestClient identityIntegrationRestClient;
     private static final String SERVICE_VERSION = "v2";
     private static final String ENDPOINT_USERS = "/users";
+    private static final String ENDPOINT_IDENTITIES = ENDPOINT_USERS + "/identities";
+
 
     @PostConstruct
     public void init() {
@@ -47,5 +51,12 @@ public class UserIntegrationRestClient extends RestClient {
             .contentType(ContentType.JSON)
             .body(body)
             .post(getPath(ENDPOINT_USERS));
+    }
+
+    public Response importUserIdentity(UsersPostRequestBody body){
+        return requestSpec()
+            .contentType(ContentType.JSON)
+            .body(body)
+            .post(getPath(ENDPOINT_IDENTITIES));
     }
 }
