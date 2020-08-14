@@ -40,16 +40,7 @@ public class LegalEntityPresentationRestClient extends RestClient {
             .extract()
             .as(LegalEntityByExternalIdGetResponseBody.class);
     }
-
-
-    public LegalEntityByIdGetResponseBody retrieveLegalEntityByLegalEntityId(String internalLegalEntityId) {
-        return requestSpec()
-            .get(getPath(ENDPOINT_LEGAL_ENTITIES + internalLegalEntityId))
-            .then()
-            .statusCode(SC_OK)
-            .extract()
-            .as(LegalEntityByIdGetResponseBody.class);
-    }
+    
 
     public ServiceAgreementGetResponseBody getMasterServiceAgreementOfLegalEntity(String internalLegalEntityId) {
         return requestSpec()
