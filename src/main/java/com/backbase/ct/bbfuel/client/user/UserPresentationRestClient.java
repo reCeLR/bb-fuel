@@ -5,6 +5,7 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
 
 import com.backbase.ct.bbfuel.client.common.RestClient;
+import com.backbase.ct.bbfuel.client.legalentity.LegalEntityPresentationRestClient;
 import com.backbase.ct.bbfuel.config.BbFuelConfiguration;
 import com.backbase.integration.user.rest.spec.v2.users.UsersPostRequestBody;
 import com.backbase.presentation.user.rest.spec.v2.users.IdentitiesPostRequestBody;
@@ -23,6 +24,8 @@ import org.springframework.stereotype.Component;
 public class UserPresentationRestClient extends RestClient {
 
     private final BbFuelConfiguration config;
+    private final LegalEntityPresentationRestClient legalEntityPresentationRestClient;
+
 
     private static final String SERVICE_VERSION = "v2";
     private static final String ENDPOINT_USERS = "/users";
@@ -59,10 +62,11 @@ public class UserPresentationRestClient extends RestClient {
 
         Response response = createIdentity(user);
 
+
         if (isBadRequestException(response, "User already exists")) {
             log.info("User [{}] already exists, skipped ingesting this user", user.getExternalId());
         } else if (response.statusCode() == SC_CREATED) {
-            log.info("User [{}] ingested under legal entity [{}]",
+            log.info("Identity User [{}] ingested under legal entity [{}]",
                 user.getExternalId(), user.getLegalEntityExternalId());
         } else {
             response.then()
@@ -73,11 +77,12 @@ public class UserPresentationRestClient extends RestClient {
     }
 
     private Response createIdentity(UsersPostRequestBody user){
+
         IdentitiesPostRequestBody createUserBody = new IdentitiesPostRequestBody();
 
         createUserBody
             .withExternalId(user.getExternalId())
-            .withLegalEntityInternalId(retrieveLegalEntityByExternalUserId(user.getExternalId()).getId())
+            .withLegalEntityInternalId(legalEntityPresentationRestClient.retrieveLegalEntityByExternalId(user.getLegalEntityExternalId()).getId())
             .withFullName(user.getFullName())
             .withEmailAddress(user.getExternalId() + "@email.com");
 

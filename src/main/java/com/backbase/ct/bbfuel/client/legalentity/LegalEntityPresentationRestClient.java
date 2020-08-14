@@ -5,6 +5,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import com.backbase.ct.bbfuel.client.common.RestClient;
 import com.backbase.ct.bbfuel.config.BbFuelConfiguration;
 import com.backbase.presentation.accessgroup.rest.spec.v2.accessgroups.serviceagreements.ServiceAgreementGetResponseBody;
+import com.backbase.presentation.legalentity.rest.spec.v2.legalentities.LegalEntityByExternalIdGetResponseBody;
 import com.backbase.presentation.legalentity.rest.spec.v2.legalentities.LegalEntityByIdGetResponseBody;
 import io.restassured.response.Response;
 import javax.annotation.PostConstruct;
@@ -31,10 +32,15 @@ public class LegalEntityPresentationRestClient extends RestClient {
         setInitialPath(config.getDbsServiceNames().getLegalentity() + "/" + CLIENT_API);
     }
 
-    public Response retrieveLegalEntityByExternalId(String externalLegalEntityId) {
+    public LegalEntityByExternalIdGetResponseBody retrieveLegalEntityByExternalId(String externalLegalEntityId) {
         return requestSpec()
-            .get(String.format(getPath(ENDPOINT_EXTERNAL), externalLegalEntityId));
+            .get(String.format(getPath(ENDPOINT_EXTERNAL),externalLegalEntityId))
+            .then()
+            .statusCode(SC_OK)
+            .extract()
+            .as(LegalEntityByExternalIdGetResponseBody.class);
     }
+
 
     public LegalEntityByIdGetResponseBody retrieveLegalEntityByLegalEntityId(String internalLegalEntityId) {
         return requestSpec()

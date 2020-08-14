@@ -36,6 +36,7 @@ public class UserIntegrationRestClient extends RestClient {
     public void ingestUserAndLogResponse(UsersPostRequestBody user) {
 
         Response response;
+
         if (this.globalProperties.getBoolean(PROPERTY_IDENTITY_FEATURE_TOGGLE)) {
             response = importUserIdentity(user);
         } else {
@@ -44,8 +45,8 @@ public class UserIntegrationRestClient extends RestClient {
 
         if (isBadRequestException(response, "User already exists") || isConflictException(response,"User already exists")) {
             log.info("User [{}] already exists, skipped ingesting this user", user.getExternalId());
-        } else if(isBadRequestException(response, "Identity with given external Id not found")) {
-            log.info("identity for user [{}] not found, creating identity", user.getExternalId());
+        } else if(response.statusCode() == 404){
+            log.info("Identity for user [{}] not found, creating identity", user.getExternalId());
             userPresentationRestClient.createIdentityUserAndLogResponse(user);
         } else if (response.statusCode() == SC_CREATED) {
             log.info("User [{}] ingested under legal entity [{}]",
