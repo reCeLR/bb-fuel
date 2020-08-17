@@ -2,6 +2,7 @@ package com.backbase.ct.bbfuel.util;
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 
 
 import com.backbase.buildingblocks.presentation.errors.BadRequestException;
@@ -31,6 +32,9 @@ public class ResponseUtils {
     }
     public static boolean isConflictException(Response response, String withMessage) {
         return response.statusCode() == SC_CONFLICT && getBadRequestMessage(response).equals(withMessage);
+    }
+    public static boolean isNotFoundException(Response response, String withMessage){
+        return response.statusCode() == SC_NOT_FOUND && getBadRequestMessage(response).equals(withMessage);
     }
 
 

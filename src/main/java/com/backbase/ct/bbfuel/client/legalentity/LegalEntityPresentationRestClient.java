@@ -40,7 +40,7 @@ public class LegalEntityPresentationRestClient extends RestClient {
             .extract()
             .as(LegalEntityByExternalIdGetResponseBody.class);
     }
-    
+
 
     public ServiceAgreementGetResponseBody getMasterServiceAgreementOfLegalEntity(String internalLegalEntityId) {
         return requestSpec()
