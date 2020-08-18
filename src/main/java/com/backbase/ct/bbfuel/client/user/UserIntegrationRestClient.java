@@ -6,6 +6,7 @@ import static com.backbase.ct.bbfuel.util.ResponseUtils.isNotFoundException;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static com.backbase.ct.bbfuel.data.CommonConstants.PROPERTY_IDENTITY_FEATURE_TOGGLE;
 
+
 import com.backbase.ct.bbfuel.client.common.RestClient;
 import com.backbase.ct.bbfuel.config.BbFuelConfiguration;
 import com.backbase.integration.user.rest.spec.v2.users.UsersPostRequestBody;
