@@ -5,7 +5,6 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
 
 import com.backbase.ct.bbfuel.client.common.RestClient;
-import com.backbase.ct.bbfuel.client.legalentity.LegalEntityPresentationRestClient;
 import com.backbase.ct.bbfuel.config.BbFuelConfiguration;
 import com.backbase.integration.user.rest.spec.v2.users.UsersPostRequestBody;
 import com.backbase.presentation.user.rest.spec.v2.users.IdentitiesPostRequestBody;
@@ -24,14 +23,14 @@ import org.springframework.stereotype.Component;
 public class UserPresentationRestClient extends RestClient {
 
     private final BbFuelConfiguration config;
-    private final LegalEntityPresentationRestClient legalEntityPresentationRestClient;
-
 
     private static final String SERVICE_VERSION = "v2";
     private static final String ENDPOINT_USERS = "/users";
     private static final String ENDPOINT_EXTERNAL_ID_LEGAL_ENTITIES = ENDPOINT_USERS + "/externalId/%s/legalentities";
     private static final String ENDPOINT_USER_BY_EXTERNAL_ID = ENDPOINT_USERS + "/externalId/%s";
     private static final String ENDPOINT_IDENTITIES = ENDPOINT_USERS + "/identities";
+
+    private static final String EMAIL_DOMAIN = "@email.invalid";
 
     @PostConstruct
     public void init() {
@@ -58,9 +57,9 @@ public class UserPresentationRestClient extends RestClient {
             .as(UserGetResponseBody.class);
     }
 
-    public void createIdentityUserAndLogResponse(UsersPostRequestBody user){
+    public void createIdentityUserAndLogResponse(UsersPostRequestBody user, String LegalEntityId){
 
-        Response response = createIdentity(user);
+        Response response = createIdentity(user,LegalEntityId);
 
 
         if (isBadRequestException(response, "User already exists")) {
@@ -72,24 +71,21 @@ public class UserPresentationRestClient extends RestClient {
             response.then()
                 .statusCode(SC_CREATED);
         }
-
-
     }
 
-    private Response createIdentity(UsersPostRequestBody user){
+    private Response createIdentity(UsersPostRequestBody user, String legalEntityId){
 
         IdentitiesPostRequestBody createUserBody = new IdentitiesPostRequestBody();
 
         createUserBody
             .withExternalId(user.getExternalId())
-            .withLegalEntityInternalId(legalEntityPresentationRestClient.retrieveLegalEntityByExternalId(user.getLegalEntityExternalId()).getId())
+            .withLegalEntityInternalId(legalEntityId)
             .withFullName(user.getFullName())
-            .withEmailAddress(user.getExternalId() + "@email.com");
+            .withEmailAddress(user.getExternalId() + EMAIL_DOMAIN);
 
         return requestSpec()
             .contentType(ContentType.JSON)
             .body(createUserBody)
             .post(getPath(ENDPOINT_IDENTITIES));
     }
-
 }

@@ -2,7 +2,6 @@ package com.backbase.ct.bbfuel.client.user;
 
 import static com.backbase.ct.bbfuel.util.ResponseUtils.isBadRequestException;
 import static com.backbase.ct.bbfuel.util.ResponseUtils.isConflictException;
-import static com.backbase.ct.bbfuel.util.ResponseUtils.isNotFoundException;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static com.backbase.ct.bbfuel.data.CommonConstants.PROPERTY_IDENTITY_FEATURE_TOGGLE;
 
@@ -27,15 +26,13 @@ public class UserIntegrationRestClient extends RestClient {
     private static final String ENDPOINT_USERS = "/users";
     private static final String ENDPOINT_IDENTITIES = ENDPOINT_USERS + "/identities";
 
-    private final UserPresentationRestClient userPresentationRestClient;
-
     @PostConstruct
     public void init() {
         setBaseUri(config.getDbs().getUser());
         setVersion(SERVICE_VERSION);
     }
 
-    public void ingestUserAndLogResponse(UsersPostRequestBody user) {
+    public void ingestAdminAndLogResponse(UsersPostRequestBody user) {
 
         Response response;
 
@@ -45,11 +42,8 @@ public class UserIntegrationRestClient extends RestClient {
             response = ingestUser(user);
         }
 
-        if (isBadRequestException(response, "User already exists") || isConflictException(response,"User already exists")) {
+        if (isBadRequestException(response, "User already exists") || isConflictException(response, "User already exists")) {
             log.info("User [{}] already exists, skipped ingesting this user", user.getExternalId());
-        } else if(isNotFoundException(response,"Identity does not exist in Identity Service")){
-            log.info("Identity for user [{}] not found, creating identity", user.getExternalId());
-            userPresentationRestClient.createIdentityUserAndLogResponse(user);
         } else if (response.statusCode() == SC_CREATED) {
             log.info("User [{}] ingested under legal entity [{}]",
                 user.getExternalId(), user.getLegalEntityExternalId());
@@ -59,7 +53,7 @@ public class UserIntegrationRestClient extends RestClient {
         }
     }
 
-    private Response ingestUser(UsersPostRequestBody body) {
+    public Response ingestUser(UsersPostRequestBody body) {
         return requestSpec()
             .contentType(ContentType.JSON)
             .body(body)

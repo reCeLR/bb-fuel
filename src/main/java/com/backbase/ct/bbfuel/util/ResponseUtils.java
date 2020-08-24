@@ -5,7 +5,9 @@ import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 
 
+import com.backbase.approval.error.ConflictException;
 import com.backbase.buildingblocks.presentation.errors.BadRequestException;
+import com.backbase.buildingblocks.presentation.errors.NotFoundException;
 import io.restassured.response.Response;
 
 public class ResponseUtils {
@@ -16,8 +18,34 @@ public class ResponseUtils {
             .as(BadRequestException.class);
     }
 
+    private static ConflictException asConflictException(Response response) {
+        return response.then()
+            .extract()
+            .as(ConflictException.class);
+    }
+
+    private static NotFoundException asNotFoundException(Response response) {
+        return response.then()
+            .extract()
+            .as(NotFoundException.class);
+    }
+
     private static String getBadRequestMessage(Response response) {
         return asBadRequestException(response)
+            .getErrors()
+            .get(0)
+            .getMessage();
+    }
+
+    private static String getConflictException(Response response) {
+        return asConflictException(response)
+            .getErrors()
+            .get(0)
+            .getMessage();
+    }
+
+    private static String getNotFoundException(Response response) {
+        return asNotFoundException(response)
             .getErrors()
             .get(0)
             .getMessage();
@@ -32,11 +60,11 @@ public class ResponseUtils {
     }
 
     public static boolean isConflictException(Response response, String withMessage) {
-        return response.statusCode() == SC_CONFLICT && getBadRequestMessage(response).equals(withMessage);
+        return response.statusCode() == SC_CONFLICT && getConflictException(response).equals(withMessage);
     }
 
     public static boolean isNotFoundException(Response response, String withMessage){
-        return response.statusCode() == SC_NOT_FOUND && getBadRequestMessage(response).equals(withMessage);
+        return response.statusCode() == SC_NOT_FOUND && getNotFoundException(response).equals(withMessage);
     }
 
     public static boolean isBadRequestExceptionWithErrorKey(Response response, String withErrorKey) {
