@@ -57,10 +57,9 @@ public class UserPresentationRestClient extends RestClient {
             .as(UserGetResponseBody.class);
     }
 
-    public void createIdentityUserAndLogResponse(UsersPostRequestBody user, String LegalEntityId){
+    public void createIdentityUserAndLogResponse(UsersPostRequestBody user, String LegalEntityId) {
 
-        Response response = createIdentity(user,LegalEntityId);
-
+        Response response = createIdentity(user, LegalEntityId);
 
         if (isBadRequestException(response, "User already exists")) {
             log.info("User [{}] already exists, skipped ingesting this user", user.getExternalId());
@@ -73,7 +72,7 @@ public class UserPresentationRestClient extends RestClient {
         }
     }
 
-    private Response createIdentity(UsersPostRequestBody user, String legalEntityId){
+    private Response createIdentity(UsersPostRequestBody user, String legalEntityId) {
 
         IdentitiesPostRequestBody createUserBody = new IdentitiesPostRequestBody();
 

@@ -70,7 +70,6 @@ public class RestClient {
     private static final String TENANT_HEADER_NAME = "X-TID";
     protected static GlobalProperties globalProperties = GlobalProperties.getInstance();
 
-
     @Getter
     private URI baseURI = null;
     private RestAssuredConfig restAssuredConfig;
