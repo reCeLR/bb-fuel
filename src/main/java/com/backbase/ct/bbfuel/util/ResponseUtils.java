@@ -9,7 +9,6 @@ import com.backbase.approval.error.ConflictException;
 import com.backbase.buildingblocks.presentation.errors.BadRequestException;
 import com.backbase.buildingblocks.presentation.errors.NotFoundException;
 import io.restassured.response.Response;
-import org.bouncycastle.cert.ocsp.RespID;
 
 public class ResponseUtils {
 
