@@ -9,6 +9,7 @@ import com.backbase.approval.error.ConflictException;
 import com.backbase.buildingblocks.presentation.errors.BadRequestException;
 import com.backbase.buildingblocks.presentation.errors.NotFoundException;
 import io.restassured.response.Response;
+import org.bouncycastle.cert.ocsp.RespID;
 
 public class ResponseUtils {
 
@@ -70,6 +71,24 @@ public class ResponseUtils {
     public static boolean isBadRequestExceptionWithErrorKey(Response response, String withErrorKey) {
         return response.statusCode() == SC_BAD_REQUEST
             && asBadRequestException(response)
+            .getErrors()
+            .get(0)
+            .getKey()
+            .equals(withErrorKey);
+    }
+
+    public static boolean isConflictExceptionWithErrorKey(Response response, String withErrorKey) {
+        return response.statusCode() == SC_CONFLICT
+            && asConflictException(response)
+            .getErrors()
+            .get(0)
+            .getKey()
+            .equals(withErrorKey);
+    }
+
+    public static boolean isNotFoundExceptionWithErrorKey(Response response, String withErrorKey) {
+        return response.statusCode() == SC_NOT_FOUND
+            && asNotFoundException(response)
             .getErrors()
             .get(0)
             .getKey()
