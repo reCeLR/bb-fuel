@@ -42,7 +42,7 @@ public class LegalEntityPresentationRestClient extends RestClient {
 
     public LegalEntityByExternalIdGetResponseBody retrieveLegalEntityByExternalId(String externalLegalEntityId) {
         return requestSpec()
-            .get(String.format(getPath(ENDPOINT_EXTERNAL),externalLegalEntityId))
+            .get(String.format(getPath(ENDPOINT_EXTERNAL), externalLegalEntityId))
             .then()
             .statusCode(SC_OK)
             .extract()

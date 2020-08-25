@@ -5,7 +5,6 @@ import static com.backbase.ct.bbfuel.util.ResponseUtils.isConflictException;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static com.backbase.ct.bbfuel.data.CommonConstants.PROPERTY_IDENTITY_FEATURE_TOGGLE;
 
-
 import com.backbase.ct.bbfuel.client.common.RestClient;
 import com.backbase.ct.bbfuel.config.BbFuelConfiguration;
 import com.backbase.integration.user.rest.spec.v2.users.UsersPostRequestBody;
@@ -48,6 +47,7 @@ public class UserIntegrationRestClient extends RestClient {
             log.info("User [{}] ingested under legal entity [{}]",
                 user.getExternalId(), user.getLegalEntityExternalId());
         } else {
+            log.info("User [{}] could not be ingested", user.getExternalId());
             response.then()
                 .statusCode(SC_CREATED);
         }

@@ -67,6 +67,7 @@ public class UserPresentationRestClient extends RestClient {
             log.info("Identity User [{}] ingested under legal entity [{}]",
                 user.getExternalId(), user.getLegalEntityExternalId());
         } else {
+            log.info("User [{}] could not be ingested", user.getExternalId());
             response.then()
                 .statusCode(SC_CREATED);
         }
